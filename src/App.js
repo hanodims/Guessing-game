@@ -1,7 +1,9 @@
 import React, {useState} from 'react';
+import { render } from '@testing-library/react';
 import {Container,Button,Row} from 'react-bootstrap'
 import logo from './thinking.svg';
 import winner from './winner.svg';
+import loser from './loser.svg';
 import './App.css';
 
 // Utils
@@ -10,24 +12,25 @@ import { shuffle } from "./utils";
 //Components
 import Won from './Components/Won'
 import Help from './Components/Help'
+import Lose from './Components/Lose';
 
 
 function App() {
 let guessedNumbers = [];
 const [number, setNumber] = useState(Math.floor(Math.random() * 100));
 //------------------------------------------------
-const [end, setEnd] = useState(false);
+const [end, setEnd] = useState('start');
 //------------------------------------------------
 
 const [attempts, setAttempts] = useState(5);
     
 function allAttempts() {
    if (attempts == 1){
-       endGame();} }
+    setEnd('lose') }}
 //------------------------------------------------
 
 const endGame = () => {
-  setEnd(false);
+  setEnd('start');
   setAttempts(5);
   let reset= document.getElementById("user_input");
    try {
@@ -98,19 +101,19 @@ const endGame = () => {
   const [result, setResult] = useState('');
   const clickHandler = () => {
       if (number==guessedNumber){
-        setEnd(true);
+        setEnd('win');
       } 
       else if (guessedNumber <= number+10 && guessedNumber > number){
-          setResult("Your Number is alittel higher " +`${number}`);
+          setResult("Your Number is alittel higher ");
           setAttempts(attempts-1);
           allAttempts();
       }
       else if (guessedNumber >= number-10 && guessedNumber < number){
-          setResult("Your Number is alittel lower "+ `${number}`);
+          setResult("Your Number is alittel lower ");
           setAttempts(attempts-1);
           allAttempts();
         } else {
-          setResult("Not even close ,try again " +`${number}`);
+          setResult("Not even close ,try again ");
           setAttempts(attempts-1);
           allAttempts();
         }
@@ -133,47 +136,65 @@ function updateUserInput(option){
  } 
 }
 //------------------------------------------------
+render (); {
+  return (
+    <div>
+      {(() => {
+        if (end==='win') {
+          return (
+            <header className="App-header">
+            <img src={winner} className="App-logo" alt="logo" />
+            <Won  endGame = {endGame} /> 
+            </header>
+          )
+        }  
+        else if (end==='lose') {
+          return (
+            <header className="App-header">
+            <img src={loser} className="App-logo" alt="logo" />
+            <Lose  endGame = {endGame} /> 
+            </header>
+          )
+        } 
+         
+        else {
+          return (
+            <header className="App-header">
+              {number}
+              <img src={logo} className="App-logo" alt="logo" />
+            <Container className="justify-content-center mb-3">
+          <Row className="justify-content-center mt-3 mb-1 "> 
+            <p className="h1 font-weight-normal">Guess the Number</p>
+            </Row>
 
-  return ( 
-    <header className="App-header">
-      {end ? (<img src={winner} className="App-logo" alt="logo" />):
-        (<img src={logo} className="App-logo" alt="logo" />)}
-    {end ? 
-   ( 
-    
-   <Won  endGame = {endGame} /> 
-   )
-    :
-    (<Container className="justify-content-center mb-3">
-      <div style={{border:"1px solid black"}}>
-    <Row className="justify-content-center mt-3 mb-1 "> 
-      <p className="h1 font-weight-normal">Guess the Number</p>
-       </Row>
+            <Row className="justify-content-center mt-1">
+            <p>{result} </p>  
+                </Row>
 
-       <Row className="justify-content-center mt-1">
-       <p>{result} </p>  
-           </Row>
+            <Row className="justify-content-center m-3">
+              <input type="number" id = "user_input" placeholder="enter 1-100" onChange={handelChange}></input>
+              </Row>
 
-      <Row className="justify-content-center m-3">
-        <input type="number" id = "user_input" placeholder="enter 1-100" onChange={handelChange}></input>
-        </Row>
-
-      <Row className="justify-content-center m-3">
-      <Button size="lg" variant="outline-danger mr-2" onClick={() => clickHandler()} >Try</Button>
-      <Button size="lg" variant="outline-info" id="helpGenerateHandler" style={{display : "block"}} onClick={() => helpGenerateHandler()} >Help</Button>
-      <Button size="lg" variant="outline-info" id="helpButton" style={{display : "none"}} onClick={() => helpHandler()} >Help</Button>
-      </Row>
-      <Row className="justify-content-center m-3">
-       Attemps left: {attempts}
-           </Row>
-    <Row  className="justify-content-center mt-3 mb-5">
-      <p id="printHelp" style={{display : "none"}}>
-        {help}
-       </p></Row>
-       </div> 
-      </Container>) }  </header>
-  );
+            <Row className="justify-content-center m-3">
+            <Button size="lg" variant="outline-danger mr-2" onClick={() => clickHandler()} >Try</Button>
+            <Button size="lg" variant="outline-info" id="helpGenerateHandler" style={{display : "block"}} onClick={() => helpGenerateHandler()} >Help</Button>
+            <Button size="lg" variant="outline-info" id="helpButton" style={{display : "none"}} onClick={() => helpHandler()} >Help</Button>
+            </Row>
+            <Row className="justify-content-center m-3">
+            Attemps left: {attempts}
+                </Row>
+          <Row  className="justify-content-center mt-3 mb-5">
+            <p id="printHelp" style={{display : "none"}}>
+              {help}
+            </p></Row>
+            </Container></header>
+          )
+        }
+      })()}
+    </div>
+  )
+}
+  
 }
 
 export default App;
-
