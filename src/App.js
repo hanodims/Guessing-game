@@ -25,10 +25,11 @@ function allAttempts() {
    if (attempts == 1){
        endGame();} }
 //------------------------------------------------
-let reset= document.getElementById("user_input");
+
 const endGame = () => {
   setEnd(false);
   setAttempts(5);
+  let reset= document.getElementById("user_input");
    try {
    reset.value =  null;
   } catch (error) {
@@ -80,7 +81,7 @@ const endGame = () => {
           }  
       }
       helpList = shuffle(helpList) ;
-      helpList = helpList.map(n => <Help n={n} guessedNumbers={guessedNumbers} help={help} setHelp={setHelp} user_input ={reset}/>);
+      helpList = helpList.map(n => <Help key={n} n={n} update_user_input={updateUserInput} />);
       return(helpList)} ;
 
 //------------------------------------------------
@@ -121,6 +122,16 @@ const [guessedNumber, setGuessedNumber] = useState(null);
   setGuessedNumber(event.target.value);
     guessedNumbers.push(guessedNumber);
 };
+function updateUserInput(option){
+  let newRreset= document.getElementById("user_input");
+  try {
+    newRreset.value =  option;
+    setGuessedNumber(newRreset.value );
+    guessedNumbers.push(guessedNumber);
+   } catch (error) {
+     console.error(error);
+ } 
+}
 //------------------------------------------------
 
   return ( 
@@ -133,8 +144,8 @@ const [guessedNumber, setGuessedNumber] = useState(null);
    <Won  endGame = {endGame} /> 
    )
     :
-    (<Container >
-      <div style={{border:"1px solid black;"}}>
+    (<Container className="justify-content-center mb-3">
+      <div style={{border:"1px solid black"}}>
     <Row className="justify-content-center mt-3 mb-1 "> 
       <p className="h1 font-weight-normal">Guess the Number</p>
        </Row>

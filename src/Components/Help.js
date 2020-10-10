@@ -18,6 +18,7 @@ function Help(props) {
         props.guessedNumbers.push(props.n);
         let new_help = props.help.filter(n => !props.guessedNumbers.includes(n));
         props.setHelp(new_help);*/
+        props.update_user_input(props.n);
 
     }
     return (
